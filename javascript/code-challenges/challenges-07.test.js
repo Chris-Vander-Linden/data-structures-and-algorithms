@@ -147,7 +147,7 @@ const listFoods = ({ ingredients }) => {
 
     let match = '';
     for (let index = 0; index < uniqueMeasurements.length; index++) {
-      if(!item.includes(uniqueMeasurements[index])) continue;
+      if (!item.includes(uniqueMeasurements[index])) continue;
 
       match = uniqueMeasurements[index];
       break;
@@ -185,9 +185,13 @@ Write a function named stepAction that takes in the recipe and extracts the acti
 Return a new array containing just the verbs. For example, ['Mix until evenly distributed'] returns ['Mix'].
 ------------------------------------------------------------------------------------------------ */
 
-const stepActions = (recipe) => {
+const stepActions = ({ steps }) => {
   let result = [];
-  // Solution code here...
+
+  steps.forEach(item => {
+    result.push(item.split(' ')[0]);
+  });
+
   return result;
 };
 
@@ -205,8 +209,19 @@ For example:
 ------------------------------------------------------------------------------------------------ */
 
 const removeEvenValues = (arr) => {
-  // Solution code here...
+
+  // loop has to start in reverse or the indexes will be thrown off
+  for (let index = arr.length; index !== 0; index--) {
+
+    // subtract 1 from index, to make sure you get index 0
+    arr[index - 1] % 2 === 0 && arr.splice(index - 1, 1);
+  }
+
+  return arr;
 };
+
+
+
 
 /* ------------------------------------------------------------------------------------------------
 CHALLENGE 10 - Stretch Goal
@@ -328,14 +343,14 @@ describe('Testing challenge 7', () => {
   });
 });
 
-xdescribe('Testing challenge 8', () => {
+describe('Testing challenge 8', () => {
   test('It should return a list of recipe steps', () => {
     expect(stepActions(gruffaloCrumble)).toStrictEqual(['Pre-heat', 'De-prickle', 'Sprinkle', 'Mix', 'Grease', 'Combine', 'Fold', 'Spread', 'Bake']);
     expect(stepActions(gruffaloCrumble).length).toStrictEqual(9);
   });
 });
 
-xdescribe('Testing challenge 9', () => {
+describe('Testing challenge 9', () => {
   test('It should remove the even numbers from the array', () => {
     let list = [1, 2, 3, 4, 5, 6];
     removeEvenValues(list);
