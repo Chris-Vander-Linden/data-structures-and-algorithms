@@ -239,7 +239,7 @@ removeLastCharacters('Gregor', 9) returns ''
 ------------------------------------------------------------------------------------------------ */
 
 const removeLastCharacters = (str, numberOfCharacters) => {
-  // Solution code here...
+  return str.length <= numberOfCharacters ? '' : str.length < 0 ? str : str.slice(0, str.length - numberOfCharacters);
 };
 
 
@@ -250,9 +250,11 @@ Write a function named totalSumCSV that, given a string of comma-separated value
 ------------------------------------------------------------------------------------------------ */
 
 const totalSumCSV = (str) => {
-  let total = 0;
-  // Solution code here...
-  return total;
+
+  return str.split(',').reduce((acc, cur) => {
+    return acc += Number.parseInt(cur);
+  }, 0);
+
 };
 
 
@@ -265,7 +267,19 @@ For example, removeVowels('gregor') returns 'grgr'.
 ------------------------------------------------------------------------------------------------ */
 
 const removeVowels = (str) => {
-  // Solution code here...
+
+  const vowels = ['a', 'e', 'i', 'o', 'u'];
+
+  return str.split('').reduce((acc, cur) => {
+
+    // if char matches vowel then return acc
+    for (let index = 0; index < vowels.length; index++) {
+      if (vowels[index] === cur.toLowerCase()) return acc;
+    }
+    acc.push(cur);
+    return acc;
+  }, []).join('');
+
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -279,7 +293,28 @@ Similarly, extractVowels('The quick brown fox') returns ['Th qck brwn fx', 'eioo
 ------------------------------------------------------------------------------------------------ */
 
 const extractVowels = (str) => {
-  // Solution code here...
+
+  const vowels = ['a', 'e', 'i', 'o', 'u'];
+  const extractedVowelArray = [];
+
+  const noVowelString = str.split('').reduce((acc, cur) => {
+
+    // if char matches vowel then return acc
+    for (let index = 0; index < vowels.length; index++) {
+      if (vowels[index] === cur.toLowerCase()) {
+        extractedVowelArray.push(vowels[index]);
+        return acc;
+      }
+    }
+    acc.push(cur);
+    return acc;
+  }, []).join('');
+
+  extractedVowelArray.sort((a, b) => {
+    return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+  });
+
+  return [noVowelString, extractedVowelArray.join('')];
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -363,7 +398,7 @@ describe('Testing challenge 9', () => {
   });
 });
 
-xdescribe('Testing challenge 10', () => {
+describe('Testing challenge 10', () => {
   test('It should shorten the string based on the first argument', () => {
     expect(removeLastCharacters('Gregor', 2)).toStrictEqual('Greg');
     expect(removeLastCharacters('Gregor', 2).length).toStrictEqual(4);
@@ -379,14 +414,14 @@ xdescribe('Testing challenge 10', () => {
   });
 });
 
-xdescribe('Testing challenge 11', () => {
+describe('Testing challenge 11', () => {
   test('It should add up the numbers contained within the string', () => {
     expect(totalSumCSV('1,4,5,7,2')).toStrictEqual(19);
     expect(totalSumCSV('147')).toStrictEqual(147);
   });
 });
 
-xdescribe('Testing challenge 12', () => {
+describe('Testing challenge 12', () => {
   test('It should return the string without vowels', () => {
     expect(removeVowels('gregor')).toStrictEqual('grgr');
     expect(removeVowels('gregor').length).toStrictEqual(4);
@@ -395,7 +430,7 @@ xdescribe('Testing challenge 12', () => {
   });
 });
 
-xdescribe('Testing challenge 13', () => {
+describe('Testing challenge 13', () => {
   test('It should return the string without vowels', () => {
     expect(extractVowels('gregor')).toStrictEqual(['grgr', 'eo']);
     expect(extractVowels('gregor').length).toStrictEqual(2);
