@@ -7,8 +7,8 @@ Write a function named returnTen, takes in a string and uses split and splice to
 
 ------------------------------------------------------------------------------------------------ */
 
-function returnTen(str){
-  // Solution code here...
+function returnTen(str) {
+  return str.split('').slice(-10);
 }
 
 /* ------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ For example:
 return: 23
 ------------------------------------------------------------------------------------------------ */
 const findMax = (matrix) => {
-  // Solution code here...
+  return matrix.flatMap(index => index).sort((a, b) => b - a)[0];
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -43,9 +43,7 @@ For example:
 
 return: 35
 ------------------------------------------------------------------------------------------------ */
-const totalSum = (matrix) => {
-  // Solution code here...
-};
+const totalSum = (matrix) => matrix.flatMap(idx => idx).reduce((prevValue, curValue) => curValue += prevValue, 0);
 
 
 /* ------------------------------------------------------------------------------------------------
@@ -71,8 +69,13 @@ const alkiBeach = [33, 31, 147, 130, 27, 93, 38, 126, 141, 63, 46, 17];
 const cookieStores = [firstPike, seaTac, seattleCenter, capHill, alkiBeach];
 
 const grandTotal = (stores) => {
-  // Solution code here...
-
+  const result = new Array(stores[0].length).fill(0);
+  for (let i = 0; i < stores.length; i++) {
+    for (let j = 0; j < stores[i].length; j++) {
+      result[j] += stores[i][j];
+    }
+  }
+  return result;
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -86,7 +89,13 @@ Write a function named salesData that uses forEach to iterate over the hourlySal
 ------------------------------------------------------------------------------------------------ */
 
 const salesData = (hours, data) => {
-  // Solution code here...
+
+  const result = [];
+  hours.forEach((hour, idx) => {
+    result.push({ sales: `${data[idx]} cookies`, time: hour });
+  });
+
+  return result;
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -111,7 +120,9 @@ const errands = [
 ];
 
 const howManyTreats = (arr) => {
-  // Solution code here...
+
+  return arr.filter(location => location.store === 'Pet store')[0].items.filter(item => item.name === 'Treats')[0].quantity;
+
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -133,7 +144,7 @@ The top row of the board is considered row zero and row numbers increase as they
 ------------------------------------------------------------------------------------------------ */
 
 const battleship = (board, row, col) => {
-  //  Solution code here...
+  return board[row][col] !== ' ' ? 'hit' : 'miss';
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -144,8 +155,14 @@ Write a function named calculateProduct that takes in a two-dimensional array of
 For example, the following input returns a product of 720: [[1,2], [3,4], [5,6]]
 ------------------------------------------------------------------------------------------------ */
 
+// [[1, 2], [], [3, 4, 5]]
+
 const calculateProduct = (numbers) => {
-  // Solution code here...
+  return numbers.reduce((prevValue1, curValue1) => {
+    return prevValue1 *= curValue1.reduce((prevValue2, curValue2) => {
+      return prevValue2 *= curValue2;
+    }, 1);
+  }, 1);
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -165,7 +182,8 @@ const weeklyTemperatures = [
 ];
 
 const averageDailyTemperature = (weather) => {
-  // Solution code here...
+  const days = weather.flatMap(day => day);
+  return days.reduce((pre, cur) => pre += cur, 0) / days.length;
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -186,7 +204,7 @@ let lowestWeeklyTemperatureData = [
 ];
 
 const lowestWeeklyAverage = (weather) => {
-  // Solution code here...
+  return weather.map(week => week.reduce((prevValue, curValue) => prevValue += curValue, 0) / 7).sort((a, b) => a - b)[0];
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -201,8 +219,10 @@ The function should parse the string as rows and columns and compute the sum of 
 For example, excel('1,1,1\n4,4,4\n9,9,9') returns [3, 12, 27].
 ------------------------------------------------------------------------------------------------ */
 
+// Interesting how we can use the Number constructor as a callback function for map to change the data type.  That could be useful.
+
 const excel = (str) => {
-  // Solution code here...
+  return str.split('\n').map(numberString => numberString.split(',').map(Number).reduce((prevValue, curValue) => prevValue += curValue, 0));
 };
 
 /* ------------------------------------------------------------------------------------------------
@@ -218,20 +238,20 @@ Run your tests from the console: jest challenge-12.test.js
 
 describe('Testing challenge 1', () => {
   test('it should return the last 10 characters of a string as an array', () => {
-    expect(returnTen('hello world')).toStrictEqual(['e','l','l','o',' ','w','o','r','l','d']);
-    expect(returnTen('world')).toStrictEqual(['w','o','r','l','d']);
+    expect(returnTen('hello world')).toStrictEqual(['e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd']);
+    expect(returnTen('world')).toStrictEqual(['w', 'o', 'r', 'l', 'd']);
   });
 });
 
 describe('Testing challenge 2', () => {
   test('It should return the max value', () => {
-    expect(findMax([[13,24,24,2], [2,5,6], [2,3]])).toStrictEqual(24);
+    expect(findMax([[13, 24, 24, 2], [2, 5, 6], [2, 3]])).toStrictEqual(24);
   });
 });
 
 describe('Testing challenge 3', () => {
   test('It should return the total sum', () => {
-    expect(totalSum([[13,24,24,2], [2,5,6], [2,3]])).toStrictEqual(81);
+    expect(totalSum([[13, 24, 24, 2], [2, 5, 6], [2, 3]])).toStrictEqual(81);
     expect(totalSum([])).toStrictEqual(0);
   });
 });
@@ -269,7 +289,7 @@ describe('Testing challenge 6', () => {
   });
 });
 
-xdescribe('Testing challenge 7', () => {
+describe('Testing challenge 7', () => {
   const battleshipData = [
     ['#', ' ', '#', ' '],
     ['#', ' ', '#', ' '],
@@ -288,7 +308,7 @@ xdescribe('Testing challenge 7', () => {
   });
 });
 
-xdescribe('Testing challenge 8', () => {
+describe('Testing challenge 8', () => {
   test('It should multiply all the numbers together', () => {
     expect(calculateProduct([[1, 2], [3, 4], [5, 6]])).toStrictEqual(720);
   });
@@ -301,20 +321,20 @@ xdescribe('Testing challenge 8', () => {
   });
 });
 
-xdescribe('Testing challenge 9', () => {
+describe('Testing challenge 9', () => {
   test('It should calculate and return the average temperature of the data set', () => {
     expect(averageDailyTemperature(weeklyTemperatures)).toStrictEqual(60.25);
   });
 });
 
-xdescribe('Testing challenge 10', () => {
+describe('Testing challenge 10', () => {
   test('It should return the lowest weekly average temperature within the data set', () => {
     expect(lowestWeeklyAverage(weeklyTemperatures)).toStrictEqual(57);
     expect(lowestWeeklyAverage(lowestWeeklyTemperatureData)).toStrictEqual(46);
   });
 });
 
-xdescribe('Testing challenge 11', () => {
+describe('Testing challenge 11', () => {
   test('It should return the total count for each row', () => {
     let result = excel('1,1,1\n4,4,4\n9,9,9');
     expect(result.length).toStrictEqual(3);
